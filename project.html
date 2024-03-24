@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="./scripts/project.js"></script>
+    <title>Pokemon Team Builder</title>
+  </head>
+  <body class="container mx-auto px-4 py-6">
+    <h1 class="text-4xl font-bold text-center text-blue-500 mb-16">
+      Pokemon First Gen Team Picker
+    </h1>
+    <!-- My Team Picks -->
+    <div class="flex justify-center gap-4">
+      <button
+        id="randomize"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Randomize
+      </button>
+      <button
+        id="clear"
+        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Clear
+      </button>
+    </div>
+    <!-- Need to add a drop down to filter by type and maybe a input? -->
+    <div id="pokemons" class="flex flex-wrap gap-2 p-2 justify-center"></div>
+  </body>
+</html>
