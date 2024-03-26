@@ -12,7 +12,13 @@
       Pokemon First Gen Team Picker
     </h1>
     <!-- My Team Picks -->
-    <div class="flex justify-center gap-4">
+
+    <div
+      id="team"
+      class="flex flex-wrap gap-2 p-2 justify-center items-center"
+    ></div>
+
+    <div class="flex justify-center gap-4 p-2">
       <button
         id="randomize"
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -27,6 +33,31 @@
       </button>
     </div>
     <!-- Need to add a drop down to filter by type and maybe a input? -->
+    <div class="w-1/2 m-auto">
+      <label for="type" class="block text-gray-700 text-sm font-bold mb-2">
+        Filter by Type
+      </label>
+      <select
+        id="type"
+        class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+      >
+        <option value="all">All</option>
+        <option value="normal">Normal</option>
+        <option value="fire">Fire</option>
+        <option value="water">Water</option>
+        <option value="electric">Electric</option>
+        <option value="grass">Grass</option>
+        <option value="ice">Ice</option>
+        <option value="fighting">Fighting</option>
+        <option value="poison">Poison</option>
+        <option value="ground">Ground</option>
+        <option value="flying">Flying</option>
+        <option value="psychic">Psychic</option>
+        <option value="bug">Bug</option>
+        <option value="rock">Rock</option>
+        <option value="ghost">Ghost</option>
+      </select>
+    </div>
     <div id="pokemons" class="flex flex-wrap gap-2 p-2 justify-center"></div>
   </body>
 </html>

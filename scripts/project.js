@@ -10,6 +10,44 @@ const getFromLocalStorage = (key) => {
 
 const pokemonsContainer = document.getElementById('pokemons');
 let pokemonsList = [];
+const team = [];
+const clearButton = document.getElementById('clear');
+clearButton.addEventListener('click', () => {
+  team.splice(0, team.length);
+  displayTeam();
+});
+
+const randomizeButton = document.getElementById('randomize');
+randomizeButton.addEventListener('click', () => {
+  const usedNumbers = [];
+  if (team.length < 6) {
+    while (team.length < 6) {
+      const randomPokemon =
+        pokemonsList[Math.floor(Math.random() * pokemonsList.length)];
+      if (!usedNumbers.includes(randomPokemon.id)) {
+        addToTeam(randomPokemon);
+        usedNumbers.push(randomPokemon.id);
+      }
+    }
+  } else {
+    alert('You already have a team!');
+  }
+});
+
+const typeFilter = document.getElementById('type');
+typeFilter.addEventListener('change', (e) => {
+  const selectedType = e.target.value;
+  if (selectedType === 'all') {
+    displayPokemons(pokemonsList);
+  } else {
+    const filteredPokemons = pokemonsList.filter((pokemon) =>
+      pokemon.types.some(
+        (type) => type.type.name === selectedType.toLowerCase()
+      )
+    );
+    displayPokemons(filteredPokemons);
+  }
+});
 
 const addTypeColor = (element, type) => {
   const typesColorMap = {
@@ -38,7 +76,7 @@ const addTypeColor = (element, type) => {
 
 const formatPokemonName = (name) => {
   let formattedName = name.charAt(0).toUpperCase() + name.slice(1);
-  if (formattedName.includes('-')) {
+  if (formattedName.includes('n-')) {
     formattedName = formattedName.replace('-', ' ');
     formattedName = formattedName.includes('f')
       ? formattedName.replace('f', '♀')
@@ -86,8 +124,73 @@ const displayPokemons = (pokemons) => {
     pokemonItem.appendChild(pokemonImage);
     pokemonItem.appendChild(pokemonName);
     pokemonItem.appendChild(pokemonTypes);
+    pokemonItem.addEventListener('click', () => {
+      addToTeam(pokemon);
+    });
     pokemonsContainer.appendChild(pokemonItem);
   });
+};
+
+const displayTeam = () => {
+  const teamContainer = document.getElementById('team');
+  teamContainer.innerHTML = '';
+  team.forEach((pokemon) => {
+    const pokemonItem = document.createElement('div');
+    pokemonItem.classList =
+      'flex flex-col items-center justify-center w-40 border border-gray-300 rounded-lg p-2 transform hover:scale-105 transition duration-200 cursor-pointer';
+
+    const name = formatPokemonName(pokemon.name);
+    const pokemonImage = document.createElement('img');
+    pokemonImage.src = pokemon.sprites.front_default;
+    pokemonImage.alt = `Picture of ${name}`;
+    const pokemonName = document.createElement('h2');
+    pokemonName.textContent = name;
+    pokemonName.classList =
+      'text-lg font-semibold text-left text-blue-400 mb-2';
+    const pokemonTypes = document.createElement('div');
+    pokemonTypes.classList = 'flex flex-wrap justify-center gap-1';
+    pokemon.types.forEach((type) => {
+      const typeElement = document.createElement('div');
+      typeElement.classList = 'text-xs text-white px-2 py-1 rounded';
+      addTypeColor(typeElement, capitalize(type.type.name));
+      typeElement.textContent = capitalize(type.type.name);
+      pokemonTypes.appendChild(typeElement);
+    });
+
+    pokemonItem.addEventListener('mouseover', () => {
+      pokemonName.classList.remove('text-blue-400');
+      pokemonName.classList.add('text-blue-600');
+    });
+
+    pokemonItem.addEventListener('mouseout', () => {
+      pokemonName.classList.remove('text-blue-600');
+      pokemonName.classList.add('text-blue-400');
+    });
+
+    pokemonItem.appendChild(pokemonImage);
+    pokemonItem.appendChild(pokemonName);
+    pokemonItem.appendChild(pokemonTypes);
+    pokemonItem.addEventListener('click', () => {
+      removeFromTeam(pokemon);
+    });
+    teamContainer.appendChild(pokemonItem);
+  });
+  if (team.length < 6) {
+    const target = 6 - team.length;
+    let i = 0;
+    while (i < target) {
+      // Create an empty slot
+      const emptySlot = document.createElement('div');
+      emptySlot.classList =
+        'flex flex-col items-center justify-center w-40 h-44 border border-dashed border-gray-300 rounded-lg p-2 transform hover:scale-105 transition duration-200 cursor-pointer';
+      emptySlot.textContent = 'Empty Slot';
+      emptySlot.addEventListener('click', () => {
+        displayPokemons(pokemonsList);
+      });
+      teamContainer.appendChild(emptySlot);
+      i++;
+    }
+  }
 };
 
 const getPokemonsData = async (type) => {
@@ -113,3 +216,16 @@ const capitalize = (string) => {
 };
 
 getPokemonsData();
+displayTeam();
+
+const addToTeam = (pokemon) => {
+  if (team.length < 6) {
+    team.push(pokemon);
+    displayTeam();
+  }
+};
+
+const removeFromTeam = (pokemon) => {
+  team.splice(team.indexOf(pokemon), 1);
+  displayTeam();
+};
