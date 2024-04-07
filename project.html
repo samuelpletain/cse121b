@@ -28,6 +28,7 @@
 
     <div class="flex justify-center gap-4 p-2">
       <button
+        title="See some information about your team."
         id="team_info"
         class="bg-slate-300 text-white font-bold py-2 px-4 rounded"
         disabled
@@ -35,12 +36,14 @@
         Team Info
       </button>
       <button
+        title="If your team has empty slots, fill them with random pokemons. If your team is full, select 6 new random pokemons."
         id="randomize"
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
         Randomize
       </button>
       <button
+        title="Remove all the selected Pokemons from your team"
         id="clear"
         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
       >
@@ -71,9 +74,10 @@
         <option value="bug">Bug</option>
         <option value="rock">Rock</option>
         <option value="ghost">Ghost</option>
+        <option value="dragon">Dragon</option>
       </select>
       <div
-        class="pointer-events-none absolute inset-y-0 top-7 right-0 flex items-center px-2 text-gray-700"
+        class="pointer-events-none absolute inset-y-0 top-8 right-0 flex items-center px-2 text-gray-700"
       >
         <svg
           class="fill-current h-4 w-4"

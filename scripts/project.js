@@ -1,13 +1,3 @@
-// Save to Local Storage
-const saveToLocalStorage = (key, value) => {
-  localStorage.setItem(key, JSON.stringify(value));
-};
-
-// Get from Local Storage
-const getFromLocalStorage = (key) => {
-  return JSON.parse(localStorage.getItem(key));
-};
-
 const pokemonsContainer = document.getElementById('pokemons');
 let pokemonsList = [];
 const team = [];
@@ -20,17 +10,16 @@ clearButton.addEventListener('click', () => {
 const randomizeButton = document.getElementById('randomize');
 randomizeButton.addEventListener('click', () => {
   const usedNumbers = [];
-  if (team.length < 6) {
-    while (team.length < 6) {
-      const randomPokemon =
-        pokemonsList[Math.floor(Math.random() * pokemonsList.length)];
-      if (!usedNumbers.includes(randomPokemon.id)) {
-        addToTeam(randomPokemon);
-        usedNumbers.push(randomPokemon.id);
-      }
+  if (team.length === 6) {
+    team.splice(0, team.length);
+  }
+  while (team.length < 6) {
+    const randomPokemon =
+      pokemonsList[Math.floor(Math.random() * pokemonsList.length)];
+    if (!usedNumbers.includes(randomPokemon.id)) {
+      addToTeam(randomPokemon);
+      usedNumbers.push(randomPokemon.id);
     }
-  } else {
-    alert('You already have a team!');
   }
 });
 
@@ -72,9 +61,9 @@ teamInfoButton.addEventListener('click', () => {
     <div class="bg-white p-6 rounded shadow-lg max-w-md mx-auto text-center">
       <h2 class="text-2xl font-bold text-gray-700">Team Information</h2>
       <p>You team is composed of the following types:</p>
-      <ul>${typeCountsStr}</ul>
-      <p>Cumulative Weight: ${weightInKilograms} kg</p>
-      <p>Cumulative Height: ${heightInMeters} m</p>
+      <ul class="pb-2">${typeCountsStr}</ul>
+      <p class="pb-1">Team Cumulative Weight: ${weightInKilograms} kg</p>
+      <p>Team Cumulative Height: ${heightInMeters} m</p>
     </div>
   `;
 
