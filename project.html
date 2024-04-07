@@ -7,7 +7,15 @@
     <script defer src="./scripts/project.js"></script>
     <title>Pokemon Team Builder</title>
   </head>
-  <body class="container mx-auto px-4 py-6">
+  <body class="container mx-auto px-4 py-6 bg-slate-100">
+    <div
+      id="teamModal"
+      class="hidden fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded shadow-lg max-w-md mx-auto text-center">
+        <p>Test</p>
+      </div>
+    </div>
     <h1 class="text-4xl font-bold text-center text-blue-500 mb-16">
       Pokemon First Gen Team Picker
     </h1>
@@ -19,6 +27,13 @@
     ></div>
 
     <div class="flex justify-center gap-4 p-2">
+      <button
+        id="team_info"
+        class="bg-slate-300 text-white font-bold py-2 px-4 rounded"
+        disabled
+      >
+        Team Info
+      </button>
       <button
         id="randomize"
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -33,7 +48,7 @@
       </button>
     </div>
     <!-- Need to add a drop down to filter by type and maybe a input? -->
-    <div class="w-1/2 m-auto">
+    <div class="w-1/2 m-auto relative">
       <label for="type" class="block text-gray-700 text-sm font-bold mb-2">
         Filter by Type
       </label>
@@ -57,7 +72,21 @@
         <option value="rock">Rock</option>
         <option value="ghost">Ghost</option>
       </select>
+      <div
+        class="pointer-events-none absolute inset-y-0 top-7 right-0 flex items-center px-2 text-gray-700"
+      >
+        <svg
+          class="fill-current h-4 w-4"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+          />
+        </svg>
+      </div>
     </div>
+
     <div id="pokemons" class="flex flex-wrap gap-2 p-2 justify-center"></div>
   </body>
 </html>

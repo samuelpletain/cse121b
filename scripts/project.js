@@ -34,6 +34,61 @@ randomizeButton.addEventListener('click', () => {
   }
 });
 
+const teamInfoButton = document.getElementById('team_info');
+const teamModal = document.getElementById('teamModal');
+
+teamInfoButton.addEventListener('click', () => {
+  const typeCounts = team
+    .flatMap((pokemon) => pokemon.types.map((type) => type.type.name))
+    .reduce(
+      (counts, type) => counts.set(type, (counts.get(type) || 0) + 1),
+      new Map()
+    );
+
+  const typeCountsStr = Array.from(typeCounts)
+    .map(
+      ([type, count]) =>
+        `<li>${count}x <span class="text-xs text-white px-2 py-1 rounded ${addTypeColor(
+          capitalize(type)
+        )}">${capitalize(type)}</span></li>`
+    )
+    .join(' ');
+
+  const cumulativeHeight = team.reduce(
+    (total, pokemon) => total + pokemon.height,
+    0
+  );
+  const cumulativeWeight = team.reduce(
+    (total, pokemon) => total + pokemon.weight,
+    0
+  );
+
+  // Convert from decimeters to meters
+  const heightInMeters = cumulativeHeight / 10;
+  // Convert from hectograms to kilograms
+  const weightInKilograms = cumulativeWeight / 10;
+
+  teamModal.innerHTML = `
+    <div class="bg-white p-6 rounded shadow-lg max-w-md mx-auto text-center">
+      <h2 class="text-2xl font-bold text-gray-700">Team Information</h2>
+      <p>You team is composed of the following types:</p>
+      <ul>${typeCountsStr}</ul>
+      <p>Cumulative Weight: ${weightInKilograms} kg</p>
+      <p>Cumulative Height: ${heightInMeters} m</p>
+    </div>
+  `;
+
+  teamModal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+});
+
+teamModal.addEventListener('click', (event) => {
+  if (event.target === teamModal) {
+    teamModal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+});
+
 const typeFilter = document.getElementById('type');
 typeFilter.addEventListener('change', (e) => {
   const selectedType = e.target.value;
@@ -49,33 +104,77 @@ typeFilter.addEventListener('change', (e) => {
   }
 });
 
-const addTypeColor = (element, type) => {
-  const typesColorMap = {
-    Normal: 'A8A77A',
-    Fire: 'EE8130',
-    Water: '6390F0',
-    Electric: 'F7D02C',
-    Grass: '7AC74C',
-    Ice: '96D9D6',
-    Fighting: 'C22E28',
-    Poison: 'A33EA1',
-    Ground: 'E2BF65',
-    Flying: 'A98FF3',
-    Psychic: 'F95587',
-    Bug: 'A6B91A',
-    Rock: 'B6A136',
-    Ghost: '735797',
-    Dragon: '6F35FC',
-    Dark: '705746',
-    Steel: 'B7B7CE',
-    Fairy: 'D685AD',
-  };
+const addTypeColor = (type, element = null) => {
+  let color = '';
+  switch (type) {
+    case 'Normal':
+      color = 'A8A77A';
+      break;
+    case 'Fire':
+      color = 'EE8130';
+      break;
+    case 'Water':
+      color = '6390F0';
+      break;
+    case 'Electric':
+      color = 'F7D02C';
+      break;
+    case 'Grass':
+      color = '7AC74C';
+      break;
+    case 'Ice':
+      color = '96D9D6';
+      break;
+    case 'Fighting':
+      color = 'C22E28';
+      break;
+    case 'Poison':
+      color = 'A33EA1';
+      break;
+    case 'Ground':
+      color = 'E2BF65';
+      break;
+    case 'Flying':
+      color = 'A98FF3';
+      break;
+    case 'Psychic':
+      color = 'F95587';
+      break;
+    case 'Bug':
+      color = 'A6B91A';
+      break;
+    case 'Rock':
+      color = 'B6A136';
+      break;
+    case 'Ghost':
+      color = '735797';
+      break;
+    case 'Dragon':
+      color = '6F35FC';
+      break;
+    case 'Dark':
+      color = '705746';
+      break;
+    case 'Steel':
+      color = 'B7B7CE';
+      break;
+    case 'Fairy':
+      color = 'D685AD';
+      break;
+    default:
+      color = 'A8A77A';
+  }
 
-  element.classList.add(`bg-[#${typesColorMap[type]}]`);
+  if (element) {
+    element.classList.add(`bg-[#${color}]`);
+  } else {
+    return `bg-[#${color}]`;
+  }
 };
 
 const formatPokemonName = (name) => {
   let formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+  // Nidoran has a special case
   if (formattedName.includes('n-')) {
     formattedName = formattedName.replace('-', ' ');
     formattedName = formattedName.includes('f')
@@ -91,7 +190,7 @@ const displayPokemons = (pokemons) => {
   pokemons.forEach((pokemon) => {
     const pokemonItem = document.createElement('div');
     pokemonItem.classList =
-      'flex flex-col items-center justify-center w-40 border border-gray-300 rounded-lg p-2 transform hover:scale-105 transition duration-200 cursor-pointer';
+      'flex flex-col items-center justify-center w-40 border border-gray-300 rounded-lg p-2 transform hover:scale-105 transition duration-200 cursor-pointer bg-white';
 
     const name = formatPokemonName(pokemon.name);
     const pokemonImage = document.createElement('img');
@@ -106,7 +205,7 @@ const displayPokemons = (pokemons) => {
     pokemon.types.forEach((type) => {
       const typeElement = document.createElement('div');
       typeElement.classList = 'text-xs text-white px-2 py-1 rounded';
-      addTypeColor(typeElement, capitalize(type.type.name));
+      addTypeColor(capitalize(type.type.name), typeElement);
       typeElement.textContent = capitalize(type.type.name);
       pokemonTypes.appendChild(typeElement);
     });
@@ -137,8 +236,7 @@ const displayTeam = () => {
   team.forEach((pokemon) => {
     const pokemonItem = document.createElement('div');
     pokemonItem.classList =
-      'flex flex-col items-center justify-center w-40 border border-gray-300 rounded-lg p-2 transform hover:scale-105 transition duration-200 cursor-pointer';
-
+      'flex flex-col items-center justify-center w-40 h-44 border border-gray-300 rounded-lg p-2 transform hover:scale-105 transition duration-200 cursor-pointer bg-white';
     const name = formatPokemonName(pokemon.name);
     const pokemonImage = document.createElement('img');
     pokemonImage.src = pokemon.sprites.front_default;
@@ -152,7 +250,7 @@ const displayTeam = () => {
     pokemon.types.forEach((type) => {
       const typeElement = document.createElement('div');
       typeElement.classList = 'text-xs text-white px-2 py-1 rounded';
-      addTypeColor(typeElement, capitalize(type.type.name));
+      addTypeColor(capitalize(type.type.name), typeElement);
       typeElement.textContent = capitalize(type.type.name);
       pokemonTypes.appendChild(typeElement);
     });
@@ -175,6 +273,17 @@ const displayTeam = () => {
     });
     teamContainer.appendChild(pokemonItem);
   });
+  if (team.length > 0) {
+    teamInfoButton.disabled = false;
+    teamInfoButton.classList.remove('bg-gray-300');
+    teamInfoButton.classList.add('bg-green-500');
+    teamInfoButton.classList.add('hover:bg-green-700');
+  } else {
+    teamInfoButton.disabled = true;
+    teamInfoButton.classList.remove('bg-green-500');
+    teamInfoButton.classList.remove('hover:bg-green-700');
+    teamInfoButton.classList.add('bg-gray-300');
+  }
   if (team.length < 6) {
     const target = 6 - team.length;
     let i = 0;
